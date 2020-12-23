@@ -21,8 +21,8 @@ The top-level parentheses are optional.
 
 Example usage:  
 ```
-((a XOR b) AND (c IMPLIES d)) AND (NOT c)'))
-\begin{tabular}{ c c c c | c c c c c c c c c }
+((a XOR b) AND (c IMPLIES d)) AND (NOT c)
+=> '\begin{tabular}{ c c c c | c c c c c c c c c }
 	 a & b & c & d & $( ( a \oplus b ) &\land ( c &\rightarrow d ) ) &\land ( &\neg c )$\\
 	 \hline
 	 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 1\\
@@ -41,5 +41,5 @@ Example usage:
 	 1 & 1 & 0 & 1 & 0 & 0 & 1 & 0 & 1\\
 	 1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
 	 1 & 1 & 1 & 1 & 0 & 0 & 1 & 0 & 0\\
-\end{tabular}
+   \end{tabular}'
 ```
