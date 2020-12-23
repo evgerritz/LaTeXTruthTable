@@ -7,7 +7,7 @@ Accepted operators:
 
 A propositional formula is defined as follows:  
 Any string of letters (except for those strings which are also operators) is a propositional formula.  
-If p and q are propositional formula, then the following are also propositional formula:
+If p and q are propositional formulae, then the following are also propositional formulae:
 ```
 (NOT p)
 (p OR q)
