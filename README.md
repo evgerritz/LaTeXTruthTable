@@ -1,13 +1,13 @@
 # LaTeXTruthTable
-Generates a truth table in LaTeX for any boolean expression. This truth table will also include all intermediate values of every nested boolean expression, skipping boolean variables.
+Generates a truth table in LaTeX for any propositional formula. This truth table will also include all intermediate values of every nested propositional formula, skipping propositional variables.
 
 # Usage
 Accepted operators:
 `NOT, OR, AND, XOR, IFF, IMPLIES`
 
-A Boolean expression is defined as follows:  
-Any string of letters (except for those strings which are also operators) is a Boolean expression.  
-If p and q are Boolean expressions, then the following are also Boolean expressions:
+A propositional formula is defined as follows:  
+Any string of letters (except for those strings which are also operators) is a propositional formula.  
+If p and q are propositional formula, then the following are also propositional formula:
 ```
 (NOT p)
 (p OR q)
