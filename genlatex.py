@@ -16,18 +16,14 @@ def gentable(exp):
 def latexexp(exp):
     exp = exp.replace('(', '( ')
     exp = exp.replace(')', ' )')
-    exp = exp.replace('AND', '&\\land')
-    exp = exp.replace('XOR', '&\\oplus')
-    exp = exp.replace('OR', '&\\lor')
-    exp = exp.replace('NOT', '&\\neg')
-    exp = exp.replace('IMPLIES', '&\\rightarrow')
-    exp = exp.replace('IFF', '&\\iff')
+    exp = exp.replace('AND', '&\\land&')
+    exp = exp.replace('XOR', '&\\oplus&')
+    exp = exp.replace('OR', '&\\lor&')
+    exp = exp.replace('NOT', '&\\neg&')
+    exp = exp.replace('IMPLIES', '&\\rightarrow&')
+    exp = exp.replace('IFF', '&\\iff&')
 
-    for i in range(len(exp)):
-        if exp[i] == '&':
-            exp = exp[:i] + exp[i+1:]
-            break
-    return exp 
+    return exp
     
 
 def genlatex(exp):
@@ -38,10 +34,10 @@ def genlatex(exp):
 
     for _ in varlst:
         latex += " c"
-    latex += " |" 
+    latex += " | c"
 
-    for _ in table[0]:
-        latex+= " c"
+    for _ in table[0][numVars:]:
+        latex+= " c c"
     latex += " }\n"
 
     latex += "\t "
@@ -55,8 +51,10 @@ def genlatex(exp):
 
     for row in table:
         latex += "\t "
-        for entry in row:
-            latex += entry + " & "
+        for i in range(numVars-1):
+            latex += row[i] + " & "
+        for i in range(numVars-1, len(row)):
+            latex += row[i] + " && "
         latex = latex[:-3] + "\\\\ \n"
 
     latex += "\\end{tabular}"

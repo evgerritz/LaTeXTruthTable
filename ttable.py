@@ -185,4 +185,3 @@ def genttable(exp):
         print(binstr + '|' + result)
     return None
     genttable(exp)
-
