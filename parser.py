@@ -1,25 +1,25 @@
 import re
 from ttable import splitBlocks, OPS, SYMBOLIC_OPS, containsNested, BINOPS
-from error import GenericHandler, MissingOperator, EmptyPF
+from error import GenericHandler, MissingOperator, EmptyPF, UnbalancedParens, InputTooLong, InvalidChar
 
 PRECEDENCE = {'AND':2, 'OR':4, 'XOR':3, 'NOT':1, 'IMPLIES':5, 'IFF':5, 'NOR':3, 'NAND':3, 'LOWEST':0}
 
 def validInput(string):
         #input too long!
     if len(string) > 100:
-        return (False, 'length')
+        return {'failed': True, 'error':InputTooLong()}
     parens = 0
     for char in string:
         if char == '(':
             parens += 1
         elif char == ')':
             parens -= 1
-        validChar = char.isalpha() or char in ['0','1', '(', ')', ' '] + list(SYMBOLIC_OPS.keys())
+        validChar = char.isalpha() or char in ['0','1', '(', ')', ' '] + list(''.join(SYMBOLIC_OPS.keys()))
         if not validChar:
-            return (False, 'invalid char: ' + char)
+            return {'failed':True, 'error':InvalidChar(char)}
     if parens != 0:
-        return (False, 'unbalanced parens')
-    return (True,)
+        return {'failed':True, 'error':UnbalancedParens(parens)}
+    return {'failed':False}
 
 def normalizeInput(string):
     string = string.strip()

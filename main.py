@@ -4,8 +4,10 @@ from parser import *
 from ttable import getvars
 from error import InvalidPF
 
+@GenericHandler
 def maketable(rawtext):
-    if validInput(rawtext)[0]:
+    validResults = validInput(rawtext)
+    if not validResults['failed']:
         listpf = splitByPrecedence(normalizeInput(rawtext))
         if validPF(listpf):
             pfrepr = textrepr(listpf)
@@ -15,6 +17,9 @@ def maketable(rawtext):
             return latextable
         else:
             raise InvalidPF()
+    else:
+        raise validResults['error']
+
 
 if __name__ == '__main__':
     while True:
