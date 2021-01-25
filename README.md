@@ -1,4 +1,4 @@
-# LaTeXTruthTable
+# LaTeX Truth Table
 Generates a truth table in LaTeX for any propositional formula. This truth table will also include all intermediate values of every nested propositional formula, skipping propositional variables.
 
 # Usage
@@ -21,25 +21,28 @@ The top-level parentheses are optional.
 
 Example usage:  
 ```
-((a XOR b) AND (c IMPLIES d)) AND (NOT c)
-=> '\begin{tabular}{ c c c c | c c c c c c c c c }
-	 a & b & c & d & $( ( a \oplus b ) &\land ( c &\rightarrow d ) ) &\land ( &\neg c )$\\
-	 \hline
-	 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 1\\
-	 0 & 0 & 0 & 1 & 0 & 0 & 1 & 0 & 1\\
-	 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
-	 0 & 0 & 1 & 1 & 0 & 0 & 1 & 0 & 0\\
-	 0 & 1 & 0 & 0 & 1 & 1 & 1 & 1 & 1\\
-	 0 & 1 & 0 & 1 & 1 & 1 & 1 & 1 & 1\\
-	 0 & 1 & 1 & 0 & 1 & 0 & 0 & 0 & 0\\
-	 0 & 1 & 1 & 1 & 1 & 1 & 1 & 0 & 0\\
-	 1 & 0 & 0 & 0 & 1 & 1 & 1 & 1 & 1\\
-	 1 & 0 & 0 & 1 & 1 & 1 & 1 & 1 & 1\\
-	 1 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0\\
-	 1 & 0 & 1 & 1 & 1 & 1 & 1 & 0 & 0\\
-	 1 & 1 & 0 & 0 & 0 & 0 & 1 & 0 & 1\\
-	 1 & 1 & 0 & 1 & 0 & 0 & 1 & 0 & 1\\
-	 1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
-	 1 & 1 & 1 & 1 & 0 & 0 & 1 & 0 & 0\\
-   \end{tabular}'
+(a OR b) IFF (b AND (NOT (c AND d)))
+=> '\begin{tabular}{ c c c c | c c c c c c c c c c c }
+	 a & b & c & d & $( a &\lor& b ) &\iff& ( b &\land& ( &\neg& ( c &\land& d ) ) )$\\ 
+	 \hline 
+	 0 & 0 & 0 & 0 && 0 && 1 && 0 && 1 && 0 \\ 
+	 0 & 0 & 0 & 1 && 0 && 1 && 0 && 1 && 0 \\ 
+	 0 & 0 & 1 & 0 && 0 && 1 && 0 && 1 && 0 \\ 
+	 0 & 0 & 1 & 1 && 0 && 1 && 0 && 0 && 1 \\ 
+	 0 & 1 & 0 & 0 && 1 && 1 && 1 && 1 && 0 \\ 
+	 0 & 1 & 0 & 1 && 1 && 1 && 1 && 1 && 0 \\ 
+	 0 & 1 & 1 & 0 && 1 && 1 && 1 && 1 && 0 \\ 
+	 0 & 1 & 1 & 1 && 1 && 0 && 0 && 0 && 1 \\ 
+	 1 & 0 & 0 & 0 && 1 && 0 && 0 && 1 && 0 \\ 
+	 1 & 0 & 0 & 1 && 1 && 0 && 0 && 1 && 0 \\ 
+	 1 & 0 & 1 & 0 && 1 && 0 && 0 && 1 && 0 \\ 
+	 1 & 0 & 1 & 1 && 1 && 0 && 0 && 0 && 1 \\ 
+	 1 & 1 & 0 & 0 && 1 && 1 && 1 && 1 && 0 \\ 
+	 1 & 1 & 0 & 1 && 1 && 1 && 1 && 1 && 0 \\ 
+	 1 & 1 & 1 & 0 && 1 && 1 && 1 && 1 && 0 \\ 
+	 1 & 1 & 1 & 1 && 1 && 0 && 0 && 0 && 1 \\ 
+    \end{tabular}'
 ```
+
+
+
