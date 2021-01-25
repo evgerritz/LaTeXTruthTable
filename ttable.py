@@ -152,26 +152,27 @@ def containsNested(lst):
 
 #combineevals: combines the truth values of all nested compound PFs
 #               from left to right into one string 
-def combineevals(exp, allowSingles=False):
+def combineevals(exp, verbose=False):
     OP = exp[0]
     if type(exp) is not list:
-        if allowSingles:
+        if verbose:
             return exp
         else:
             return None
     elif not containsNested(exp):
-        return str(evalbool(exp))
+        result = str(evalbool(exp)) 
+        return result if not verbose else exp[1] + result + exp[2]
     elif OP == 'NOT':
         Rresult =  str(evalbool(exp[1]))
         Lresult =  evalbool(['NOT', Rresult])
-        return str(Lresult) + str(combineevals(exp[1]))
+        return str(Lresult) + str(combineevals(exp[1], verbose))
     elif OP in OPS:
         Lresult =  str(evalbool(exp[1]))
         Rresult =  str(evalbool(exp[2]))
         Mresult =  str(evalbool([OP, Lresult, Rresult]))
 
-        tempLeft = combineevals(exp[1])
-        tempRight = combineevals(exp[2])
+        tempLeft = combineevals(exp[1], verbose)
+        tempRight = combineevals(exp[2], verbose)
         
         if tempLeft:
             Mresult = str(tempLeft) + Mresult

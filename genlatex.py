@@ -4,7 +4,7 @@ import parser
 #gentable: returns the main rows of the truth table 
 #           where each row consists of the values of variables
 #           followed by the evaluations of the PFS with those values
-def gentable(listpf, textrepr, varlst):
+def gentable(listpf, textrepr, varlst, verbose=False):
     table = []
 
     numVars = len(varlst)
@@ -12,57 +12,70 @@ def gentable(listpf, textrepr, varlst):
 
     for binstr in inputs:
         temp = makeprefix(parser.splitByPrecedence(sub_into_exp(textrepr, binstr)))
-        allowSingles = True if temp in ('0', '1') else False
-        result = combineevals(temp, allowSingles)
+        verbose = verbose or temp in ('0', '1') 
+        result = combineevals(temp, verbose)
         table.append(binstr + result)
     return table
 
 #latexexp: converts the word-based OPs in exp to LaTeX commands
-def latexexp(exp):
+def latexexp(exp, varlst, verbose=False):
+    terminalAligner = '&' if not verbose else ''
     exp = exp.replace('(', '( ')
     exp = exp.replace(')', ' )')
-    exp = exp.replace(' AND', ' &\\land&')
-    exp = exp.replace('XOR', ' &\\oplus&')
-    exp = exp.replace(' OR', '&\\lor&')
-    exp = exp.replace('NOT', '&\\neg&')
-    exp = exp.replace('IMPLIES', '&\\rightarrow&')
-    exp = exp.replace('IFF', '&\\iff&')
-    exp = exp.replace('NOR', '&NOR&')
-    exp = exp.replace('NAND', '&NAND&')
+    exp = exp.replace(' AND', ' &\\land' + terminalAligner)
+    exp = exp.replace('XOR', ' &\\oplus' + terminalAligner)
+    exp = exp.replace(' OR', ' &\\lor' + terminalAligner)
+    exp = exp.replace('NOT', '&\\neg' + terminalAligner)
+    exp = exp.replace('IMPLIES', '&\\rightarrow' + terminalAligner)
+    exp = exp.replace('IFF', '&\\iff' + terminalAligner)
+    exp = exp.replace('NOR', '&NOR' + terminalAligner)
+    exp = exp.replace('NAND', '&NAND' + terminalAligner)
+
+    if verbose:
+        for var in varlst:
+            exp = exp.replace(f' {var} ', f' &{var} ')
+
     return exp
     
 
 #genlatex: produces a truth table formatted in LaTeX for exp
-def genlatex(textrepr, listpf, varlst, texttable):
+def genlatex(textrepr, listpf, varlst, texttable, verbose=False):
     numVars = len(varlst)
     latex = "\\begin{tabular}{"
 
     for _ in varlst:
         latex += " c"
-    latex += " | c"
+    latex += " | c" if not verbose else " | c c"
 
     for _ in texttable[0][numVars:]:
-        latex+= " c c"
+        latex+= " c c" if not verbose else " c"
     latex += " }\n"
 
-    latex += "\t "
+    latex += "\t"
     for var in varlst:
         latex += var +" & "
 
     latex += "$"
-    latex += latexexp(textrepr)
+    latex += latexexp(textrepr, varlst, verbose)
     latex += "$\\\\ \n"
-    latex += "\t \\hline \n"
+    latex += "\t\\hline \n"
 
+    varSep = " & "
+    valSep = " && " if not verbose else varSep
     for row in texttable:
-        latex += "\t "
-        for i in range(numVars-1):
-            latex += row[i] + " & "
-        for i in range(numVars-1, len(row)):
-            latex += row[i] + " && "
-        latex = latex[:-3] + "\\\\ \n"
-
+        latex += "\t"
+        for val in row[:numVars]:
+            latex += val + varSep
+        latex=latex[:-3]
+        latex += " &" if verbose else ""
+        for val in row[numVars:]:
+            latex += valSep + val
+        latex += " \\\\ \n"
+            
     latex += "\\end{tabular}"
 
     return latex
 
+if __name__ == '__main__':
+    def tablewrapper(rawtext):
+        return gentable(parser.splitByPrecedence(rawtext), parser.textrepr(rawtext), getvars(rawtext), verbose=True)

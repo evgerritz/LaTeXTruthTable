@@ -22,10 +22,10 @@ class InvalidChar(Exception):
         self.invalidChar = char
         Exception.__init__(self)
 
-def GenericHandler(func, *args):
-    def nested(*args):
+def GenericHandler(func, *args, **kargs):
+    def nested(*args, **kargs):
         try:
-            return func(*args)
+            return func(*args, **kargs)
         except Exception as error:
             try:
                 print('error: ' + error.name)
