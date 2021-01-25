@@ -1,13 +1,16 @@
-testEXP = "(p AND q) OR (NOT r)"
-testBS = "010"
+OPS = ['AND', 'OR', 'XOR', 'NOT', 'IMPLIES', 'IFF', 'NOR', 'NAND']
+NOTINDEX = OPS.index('NOT')
+BINOPS = OPS[:NOTINDEX] + OPS[NOTINDEX+1:]
+SYMBOLIC_OPS = {'&':'AND', '*': 'AND', '|':'OR', '+':'OR', '^':'XOR', '~':'NOT', '!':'NOT', '<>':'NOT', '=>':'IMPLIES', '->':'IMPLIES', '<=>':'IFF', '<->':'IFF'}
 
-OPS = ['AND', 'OR', 'XOR', 'NOT', 'IMPLIES', 'IFF'] 
-
+#de/offset: adds and removes a space at the end of a string,
+#            for easier parsing of words
 def offset(string):
     return string + " "
 def deoffset(string):
     return string[:-1]
 
+#getvars: extract all non non-OP strings from exp
 def getvars (exp):
     exp = offset(exp)
     varlst = []
@@ -21,7 +24,7 @@ def getvars (exp):
         word += char   
     return varlst
 
-#returns a list of all possible bit strings of length numVars
+#binarycount: returns a list of all possible bit strings of length numVars
 def binarycount (numVars):
     if numVars == 1:
         return ['0','1']
@@ -33,7 +36,7 @@ def binarycount (numVars):
         strs.sort()
         return strs
 
-#substitute values into exp
+#sub_into_exp: substitute truth values into exp
 def sub_into_exp(exp, binstr):
     exp = offset(exp)
 
@@ -50,6 +53,8 @@ def sub_into_exp(exp, binstr):
         word += char   
     return deoffset(exp)
 
+#findclosingparen: returns the index in exp of the paren corresponding with
+#                  the first character of exp, if that char is indeed a paren
 def findclosingparen(exp):
     parencount = 0
     for i, char in enumerate(exp):
@@ -62,8 +67,8 @@ def findclosingparen(exp):
             return i
     return None
 
-
-def splitrest(exp):
+#splitBlocks: splits exp into a list of operators and operands 
+def splitBlocks(exp):
     exp = exp.strip()
     i = 0
     while i < len(exp):
@@ -75,21 +80,11 @@ def splitrest(exp):
             i += split
             continue
         elif char == ' ':
-            exp = exp[0:i] + 'NULL' + exp[i+1:]
+               exp = exp[0:i] + 'NULL' + exp[i+1:].lstrip() #skip whitespace
         i+=1
     return exp.split('NULL')
 
-def parenstolist(exp):
-    lst = []
-    blocks = splitrest(exp)
-    if not blocks:
-        return None                     #UNBALANCED PARENS
-    for block in blocks:
-        if block[0] == '(':
-            block = parenstolist(block[1:-1])
-        lst.append(block)
-    return lst
-
+#makeprefix: converts infix notation of user input into prefix notation
 def makeprefix(exp):
     lst = []
     if type(exp) is not list:
@@ -106,7 +101,7 @@ def makeprefix(exp):
     else:
         return makeprefix(exp[0])
 
-
+#definitions of operators for evaluation
 def AND (a, b):
     return a & b
 
@@ -125,34 +120,46 @@ def IMPLIES (a,b):
 def IFF(a,b):
     return NOT(XOR(a,b))
 
-#expects prefix-notation list representing a boolean exp
-# with truth values substituted
+def NOR(a,b):
+    return NOT(OR(a,b))
+
+def NAND(a,b):
+    return NOT(AND(a,b))
+
+#evalbool: returns the truth value of a prefix-notation
+#          list representing a PF with truth values substituted
 def evalbool(exp):
-    OP = exp[0]
+    op = exp[0]
     if exp == '0':
         return 0
     elif exp == '1':
         return 1
-    elif OP == 'NOT':
+    elif op == 'NOT':
         Rresult =  evalbool(exp[1])
         Lresult =  NOT(Rresult)
         return Lresult
-    elif OP in OPS:
+    elif op in BINOPS:
         Lresult =  evalbool(exp[1])
         Rresult =  evalbool(exp[2])
-        Mresult = eval(OP)(Lresult, Rresult)
+        Mresult = eval(op)(Lresult, Rresult)
         return Mresult
     else:
         return None
 
-def isNested(lst):
+#containsNested: returns True if a list contains at least one list
+def containsNested(lst):
     return any(isinstance(i, list) for i in lst)
 
-def combineevals(exp):
+#combineevals: combines the truth values of all nested compound PFs
+#               from left to right into one string 
+def combineevals(exp, allowSingles=False):
     OP = exp[0]
     if type(exp) is not list:
-        return None
-    elif not isNested(exp):
+        if allowSingles:
+            return exp
+        else:
+            return None
+    elif not containsNested(exp):
         return str(evalbool(exp))
     elif OP == 'NOT':
         Rresult =  str(evalbool(exp[1]))
@@ -174,14 +181,3 @@ def combineevals(exp):
         return Mresult
     else:
         return None
-
-def genttable(exp):
-    varlst = getvars(exp)
-    inputs = binarycount(len(varlst))
-    print(str(varlst)+'|'+exp)
-    for binstr in inputs:
-        temp = makeprefix(parenstolist(sub_into_exp(exp, binstr)))
-        result = combineevals(temp)
-        print(binstr + '|' + result)
-    return None
-    genttable(exp)
