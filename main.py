@@ -4,42 +4,45 @@ import readline
 from genlatex import genlatex, gentable
 from parser import *
 from ttable import getvars
-from error import InvalidPF
+from error import InvalidPF, UserException
 
-@GenericHandler
 def maketable(rawtext, verbose=False):
-    validResults = validInput(rawtext)
-    if not validResults['failed']:
+    isValid = isValidInput(rawtext)
+    if not isValid['failed']:
         listpf = splitByPrecedence(normalizeInput(rawtext))
         if validPF(listpf):
             pfrepr = textrepr(listpf)
             varlst = getvars(pfrepr) 
-            table = gentable(listpf, pfrepr, varlst, verbose)
+            table = gentable(pfrepr, len(varlst), verbose)
             latextable = genlatex(pfrepr, listpf, varlst, table, verbose)
             return latextable
         else:
             raise InvalidPF()
     else:
-        raise validResults['error']
+        raise isValid['error']
 
 
 if __name__ == '__main__':
     def interactive():
-        msgs = [' LaTeX Truth Table', 'q or Ctrl-C to quit ']
+        msgs = [' LaTeX Truth Table', 'Ctrl-C to quit ']
         msglength = len(msgs[0]) + len(msgs[1])
         sep = '=' * 100 + '\n'
         print('\n' + msgs[0] + ' ' * (len(sep[:-1]) - msglength) + msgs[1])
-        try:
-            while True:
+        while True:
+            try:
                 print(sep)
                 response  = input('Enter PF: ')
                 verbose = input('Verbose? (y/N): ') in ['Y', 'y']
-                if response.lower() in ['q', 'quit()', 'exit()', 'exit', 'quit']:
-                    sys.exit(0)
                 table = maketable(response, verbose)
                 print(table)
-        except KeyboardInterrupt:
-            sys.exit(0)
+            except InvalidChar as error:
+                print('error:',  error.name + ':', error.invalidChar)
+            except UnbalancedParens as error:
+                print('error:',  error.name + ':', error.parens)
+            except UserException as error:
+                print('error:', error.name)
+            except KeyboardInterrupt:
+                sys.exit(0)
      
     if len(sys.argv) == 1:
         interactive()

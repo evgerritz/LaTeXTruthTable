@@ -1,35 +1,29 @@
-class MissingOperator(Exception):
+class UserException(Exception): pass
+
+class MissingOperator(UserException):
     name = 'MissingOperator'
 
-class EmptyPF(Exception):
+class EmptyPF(UserException):
     name = 'EmptyPF'
 
-class InvalidPF(Exception):
+class InvalidPF(UserException):
     name = 'InvalidPF'
 
-class InputTooLong(Exception):
+class InputTooLong(UserException):
     name = 'InputTooLong'
 
-class UnbalancedParens(Exception):
+class MissingOperands(UserException):
+    name = 'MissingOperands'
+
+class UnbalancedParens(UserException):
     name = 'UnbalancedParens'
     def __init__(self, numParens):
-        self.parens = 'too many ' + '(' if numParens > 0 else ')'
+        self.parens = 'too many ' + ('(' if numParens > 0 else ')')
         Exception.__init__(self)
 
-class InvalidChar(Exception):
+class InvalidChar(UserException):
     name = 'InvalidChar'
     def __init__(self, char):
         self.invalidChar = char
         Exception.__init__(self)
 
-def GenericHandler(func, *args, **kargs):
-    def nested(*args, **kargs):
-        try:
-            return func(*args, **kargs)
-        except Exception as error:
-            try:
-                print('error: ' + error.name)
-                raise
-            except TypeError:
-                print('Unexpected Non-user Error')
-    return nested

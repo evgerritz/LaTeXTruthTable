@@ -1,22 +1,26 @@
 import re
 from ttable import splitBlocks, OPS, SYMBOLIC_OPS, containsNested, BINOPS
-from error import GenericHandler, MissingOperator, EmptyPF, UnbalancedParens, InputTooLong, InvalidChar
+from error import MissingOperator, EmptyPF, UnbalancedParens, InputTooLong, InvalidChar 
 
 PRECEDENCE = {'AND':2, 'OR':4, 'XOR':3, 'NOT':1, 'IMPLIES':5, 'IFF':5, 'NOR':3, 'NAND':3, 'LOWEST':0}
 
-def validInput(string):
+def isValidChar(char):
+    return char.isalpha() or char in ['0','1', '(', ')', ' '] + list(''.join(SYMBOLIC_OPS.keys()))
+
+def isValidLength(string):
+    return len(string) < 100 
+
+def numUnbalancedParens(string):
+    return string.count('(')-string.count(')')
+
+def isValidInput(string):
         #input too long!
-    if len(string) > 100:
+    if not isValidLength(string):
         return {'failed': True, 'error':InputTooLong()}
-    parens = 0
     for char in string:
-        if char == '(':
-            parens += 1
-        elif char == ')':
-            parens -= 1
-        validChar = char.isalpha() or char in ['0','1', '(', ')', ' '] + list(''.join(SYMBOLIC_OPS.keys()))
-        if not validChar:
+        if not isValidChar(char):
             return {'failed':True, 'error':InvalidChar(char)}
+    parens = numUnbalancedParens(parens)
     if parens != 0:
         return {'failed':True, 'error':UnbalancedParens(parens)}
     return {'failed':False}
@@ -40,9 +44,9 @@ def normalizeInput(string):
 def isLowerPrecedence(prec1, prec2):
     return prec1 > prec2
 
-@GenericHandler
 def splitByPrecedence(pfstring):
     lowestPrec = {'index': -1, 'val': PRECEDENCE['LOWEST']} 
+    print(pfstring)
     splitted = splitBlocks(pfstring)
     if not splitted[0]:
         raise EmptyPF()
@@ -74,9 +78,9 @@ def textrepr(listpf):
         results = [textrepr(listpf[i]) for i in range(len(listpf))]
         return '(' + ' '.join(results) + ')'
 
-@GenericHandler
 def validPF(listpf):
-    if isinstance(listpf, str) or listpf in ('0', '1'):
+    print(listpf)
+    if isinstance(listpf, str) and not listpf.upper() in OPS:
         return True
     elif listpf[0] == 'NOT' and len(listpf) == 2:
         return validPF(listpf[1])

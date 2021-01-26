@@ -4,10 +4,9 @@ import parser
 #gentable: returns the main rows of the truth table 
 #           where each row consists of the values of variables
 #           followed by the evaluations of the PFS with those values
-def gentable(listpf, textrepr, varlst, verbose=False):
+def gentable(textrepr, numVars, verbose=False):
     table = []
 
-    numVars = len(varlst)
     inputs = binarycount(numVars)
 
     for binstr in inputs:
@@ -78,4 +77,4 @@ def genlatex(textrepr, listpf, varlst, texttable, verbose=False):
 
 if __name__ == '__main__':
     def tablewrapper(rawtext):
-        return gentable(parser.splitByPrecedence(rawtext), parser.textrepr(rawtext), getvars(rawtext), verbose=True)
+        return gentable(parser.textrepr(rawtext), getvars(rawtext), verbose=True)

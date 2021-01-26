@@ -1,3 +1,5 @@
+from error import MissingOperands
+
 OPS = ['AND', 'OR', 'XOR', 'NOT', 'IMPLIES', 'IFF', 'NOR', 'NAND']
 NOTINDEX = OPS.index('NOT')
 BINOPS = OPS[:NOTINDEX] + OPS[NOTINDEX+1:]
@@ -17,7 +19,7 @@ def getvars (exp):
     word = ""
     for char in exp:
         if char in [' ', '(', ')']:
-            if word and word not in OPS and word not in varlst:
+            if word and word not in OPS+list(SYMBOLIC_OPS.keys()) and word not in varlst:
                 varlst.append(word)
             word = ""
             continue
@@ -26,7 +28,9 @@ def getvars (exp):
 
 #binarycount: returns a list of all possible bit strings of length numVars
 def binarycount (numVars):
-    if numVars == 1:
+    if numVars == 0:
+        raise MissingOperands()
+    elif numVars == 1:
         return ['0','1']
     else:
         strs = []
