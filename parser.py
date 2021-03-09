@@ -20,7 +20,7 @@ def isValidInput(string):
     for char in string:
         if not isValidChar(char):
             return {'failed':True, 'error':InvalidChar(char)}
-    parens = numUnbalancedParens(parens)
+    parens = numUnbalancedParens(string)
     if parens != 0:
         return {'failed':True, 'error':UnbalancedParens(parens)}
     return {'failed':False}

@@ -165,7 +165,12 @@ def combineevals(exp, verbose=False):
             return None
     elif not containsNested(exp):
         result = str(evalbool(exp)) 
-        return result if not verbose else exp[1] + result + exp[2]
+        if verbose:
+            if OP =='NOT':
+                result += exp[1]
+            else:
+                result = exp[1] + result + exp[2]
+            return result 
     elif OP == 'NOT':
         Rresult =  str(evalbool(exp[1]))
         Lresult =  evalbool(['NOT', Rresult])
