@@ -1,5 +1,4 @@
-import re
-from ttable import splitBlocks, OPS, SYMBOLIC_OPS, containsNested, BINOPS
+from ttable import splitBlocks, OPS, SYMBOLIC_OPS, containsNested, BINARY_OPS
 from error import MissingOperator, EmptyPF, UnbalancedParens, InputTooLong, InvalidChar 
 
 PRECEDENCE = {'AND':2, 'OR':4, 'XOR':3, 'NOT':1, 'IMPLIES':5, 'IFF':5, 'NOR':3, 'NAND':3, 'LOWEST':0}
@@ -46,7 +45,6 @@ def isLowerPrecedence(prec1, prec2):
 
 def splitByPrecedence(pfstring):
     lowestPrec = {'index': -1, 'val': PRECEDENCE['LOWEST']} 
-    print(pfstring)
     splitted = splitBlocks(pfstring)
     if not splitted[0]:
         raise EmptyPF()
@@ -79,12 +77,11 @@ def textrepr(listpf):
         return '(' + ' '.join(results) + ')'
 
 def validPF(listpf):
-    print(listpf)
     if isinstance(listpf, str) and not listpf.upper() in OPS:
         return True
     elif listpf[0] == 'NOT' and len(listpf) == 2:
         return validPF(listpf[1])
-    elif listpf[1] in BINOPS and len(listpf) == 3:
+    elif listpf[1] in BINARY_OPS and len(listpf) == 3:
         return validPF(listpf[0]) and validPF(listpf[2]) 
     else:
         return False

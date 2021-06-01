@@ -1,8 +1,7 @@
 from error import MissingOperands
 
 OPS = ['AND', 'OR', 'XOR', 'NOT', 'IMPLIES', 'IFF', 'NOR', 'NAND']
-NOTINDEX = OPS.index('NOT')
-BINOPS = OPS[:NOTINDEX] + OPS[NOTINDEX+1:]
+(BINARY_OPS := OPS.copy()).remove('NOT')
 SYMBOLIC_OPS = {'&':'AND', '*': 'AND', '|':'OR', '+':'OR', '^':'XOR', '~':'NOT', '!':'NOT', '<>':'NOT', '=>':'IMPLIES', '->':'IMPLIES', '<=>':'IFF', '<->':'IFF'}
 
 #de/offset: adds and removes a space at the end of a string,
@@ -170,7 +169,7 @@ def combineevals(exp, verbose=False):
                 result += exp[1]
             else:
                 result = exp[1] + result + exp[2]
-            return result 
+        return result 
     elif OP == 'NOT':
         Rresult =  str(evalbool(exp[1]))
         Lresult =  evalbool(['NOT', Rresult])

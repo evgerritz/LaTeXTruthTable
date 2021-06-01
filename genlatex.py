@@ -10,9 +10,9 @@ def gentable(textrepr, numVars, verbose=False):
     inputs = binarycount(numVars)
 
     for binstr in inputs:
-        temp = makeprefix(parser.splitByPrecedence(sub_into_exp(textrepr, binstr)))
-        verbose = verbose or temp in ('0', '1') 
-        result = combineevals(temp, verbose)
+        RHS = makeprefix(parser.splitByPrecedence(sub_into_exp(textrepr, binstr)))
+        verbose = verbose or RHS in ('0', '1') 
+        result = combineevals(RHS, verbose)
         table.append(binstr + result)
     return table
 
