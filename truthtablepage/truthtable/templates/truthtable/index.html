@@ -1,0 +1,8 @@
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'truthtable' %}" method="post">
+	{% csrf_token %}
+	<input type="text" name="pf" id="pf_input">
+	<label for="pf_input">Enter PF:</label><br>
+<input type="submit" value="Submit">
+</form>
