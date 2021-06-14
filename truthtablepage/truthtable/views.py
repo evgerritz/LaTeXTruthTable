@@ -1,20 +1,14 @@
 from django.shortcuts import render
+from src import *
 
 def index(request):
-    context = {'test_var': 'wowza'}
+    context = {}
     return render(request, 'truthtable/index.html', context)
 
-def user_input(request):
-    context = {}
-    try:
-        context['raw_pf'] = request.POST['pf']
-    except KeyError:
-        return render(request, 'truthtable/index.html', {
-            'error_message': "no pf entered",
-        })
+def result(request):
+    if request.method == 'POST':
+        pf = request.POST.get('pf', None)
+        result = main.maketable(pf)
+        return render(request, 'truthtable/result.html', {'pf':pf, 'result':result})
     else:
-        return HttpResponseRedirect('/truthtable/result/')
-
-def result(request, pf):
-    result = 
-    return render(request, 'polls/result.html', {'pf':pf, 'result':result})
+        return render(request, 'truthtable/index.html')
