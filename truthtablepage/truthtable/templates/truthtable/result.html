@@ -1,10 +1,20 @@
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-<form action="{% url 'result' %}" method="post">
-	{% csrf_token %}
-	<label for="pf_input">Enter PF:</label><br>
-	<input type="text" name="pf" id="pf_input">
-<input type="submit" value="Submit">
-</form>
+<!DOCTYPE html>
+<html>
+    <head>
+        {% load static %}
+    </head>
+    <body>
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<p>{{ pf }}</p>
-<pre>{{ result }}</pre>
+        <form action="{% url 'result' %}" method="post">
+            {% csrf_token %}
+            <label for="pf_input">Enter PF:</label><br>
+            <input type="text" name="pf" id="pf_input">
+        <input type="submit" value="Submit">
+        </form>
+
+        <p>{{ pf }}</p>
+        <pre>{{ result_text }}</pre>
+        <img src="{% static 'images/temp.png' %}" alt="{% static '/images/temp.png' %}" style="float:left"/>
+    </body>
+</html>
