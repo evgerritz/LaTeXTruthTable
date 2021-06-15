@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-2vbi2!u9@8*z%+dwdi%@s54t&@5vp+y&qjcp4hukre_^0e!3ix
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['latex-truth-table.herokuapp.com']
 
 
 # Application definition
