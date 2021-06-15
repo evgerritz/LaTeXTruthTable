@@ -1,5 +1,5 @@
 # LaTeX Truth Table
-Generates a beatifully formatted and highly readable truth table in LaTeX for any propositional formula. This truth table will also include all intermediate values of every nested propositional formula, skipping propositional variables.
+Generates a well formatted and highly readable truth table in LaTeX for any propositional formula. This truth table will also include all intermediate values of every nested propositional formula, skipping propositional variables.
 
 # Usage
 Accepted operators (uppercase or lowercase):  
