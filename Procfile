@@ -1,1 +1,1 @@
-web: gunicorn truthtablepage.wsgi
+web: gunicorn truthtable.wsgi
