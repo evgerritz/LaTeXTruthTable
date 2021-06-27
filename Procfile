@@ -1,2 +1,2 @@
-web: gunicorn truthtablepage.wsgi
-web: gunicorn truthtable:app
+web: gunicorn truthtqablepage.truthtablepage.wsgi
+web: gunicorn truthtqablepage.truthtable:app
